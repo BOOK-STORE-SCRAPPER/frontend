@@ -32,6 +32,12 @@ const nextConfig: NextConfig = {
         hostname: '*.fly.dev',
         pathname: '/media/**',
       },
+      // Supabase storage (if using Supabase Storage for images)
+      {
+        protocol: 'https',
+        hostname: '*.supabase.co',
+        pathname: '/storage/**',
+      },
       // Allow any HTTPS backend for flexibility (you can restrict this later)
       {
         protocol: 'https',
