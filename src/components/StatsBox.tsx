@@ -2,6 +2,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { api } from '../lib/api';
 
 interface Stats {
     categories: number;
@@ -21,9 +22,7 @@ export default function StatsBox() {
 
     const fetchStats = async () => {
         try {
-            const response = await fetch('http://localhost:8000/categories/stats');
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
-            const data = await response.json();
+            const data = await api.get<Stats>('/categories/stats');
             setStats(data);
             setLoading(false);
         } catch (err) {

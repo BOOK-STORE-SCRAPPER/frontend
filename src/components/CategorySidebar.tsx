@@ -3,6 +3,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { Category } from '../types/api';
+import { api } from '../lib/api';
 
 interface CategorySidebarProps {
     onCategoriesScraped: (count: number) => void;
@@ -24,11 +25,7 @@ export default function CategorySidebar({
     const fetchCategories = useCallback(() => {
         setLoading(true);
         setError(null);
-        fetch('http://localhost:8000/categories')
-            .then(res => {
-                if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                return res.json();
-            })
+        api.get<Category[]>('/categories')
             .then((data: Category[]) => {
                 const categoryList = data || [];
                 setCategories(categoryList);
@@ -54,17 +51,8 @@ export default function CategorySidebar({
         setError(null);
 
         try {
-            const response = await fetch('http://localhost:8000/categories/', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ base_url: 'http://books.toscrape.com/' })
-            });
-
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
-            const result = await response.json();
+            const result = await api.post('/categories/', { base_url: 'http://books.toscrape.com/' });
             console.log('Categories scraped:', result);
-
             fetchCategories();
         } catch (err) {
             console.error('Error scraping categories:', err);
@@ -92,15 +80,7 @@ export default function CategorySidebar({
                 }))
             };
 
-            const response = await fetch('http://localhost:8000/scrape/categories', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
-            const result = await response.json();
+            const result = await api.post('/scrape/categories', payload);
             console.log('Books scraped:', result);
 
             // Refetch categories to update has_books status

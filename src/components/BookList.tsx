@@ -3,6 +3,7 @@
 
 import { useEffect, useState } from 'react';
 import { Book } from '../types/api';
+import { api } from '../lib/api';
 
 interface BookListProps {
     categoryIds: number[];
@@ -25,16 +26,12 @@ export default function BookList({ categoryIds, onBookSelect }: BookListProps) {
                 if (categoryIds && categoryIds.length > 0) {
                     // Fetch books for selected categories
                     for (const categoryId of categoryIds) {
-                        const response = await fetch(`http://localhost:8000/scrape/books?category_id=${categoryId}`);
-                        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                        const data = await response.json();
+                        const data = await api.get<{ books: Book[] }>(`/scrape/books?category_id=${categoryId}`);
                         allBooks.push(...(data.books || []));
                     }
                 } else {
                     // Fetch all books when no categories selected
-                    const response = await fetch('http://localhost:8000/scrape/books');
-                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                    const data = await response.json();
+                    const data = await api.get<{ books: Book[] }>('/scrape/books');
                     allBooks.push(...(data.books || []));
                 }
 
