@@ -4,44 +4,23 @@ const nextConfig: NextConfig = {
   /* config options here */
   reactCompiler: true,
   images: {
+    unoptimized: true, // Disable image optimization for development
     remotePatterns: [
       {
         protocol: 'http',
         hostname: 'localhost',
         port: '8000',
-        pathname: '/media/**',
+        pathname: '/media/**', // Allow images from backend media folder
+      },
+      {
+        protocol: 'http',
+        hostname: '127.0.0.1',
+        port: '8000',
+        pathname: '/media/**', // Also allow 127.0.0.1
       },
       {
         protocol: 'https',
         hostname: 'books.toscrape.com',
-        pathname: '/media/**',
-      },
-      // Allow images from backend deployment URLs (Railway, Render, Fly.io)
-      {
-        protocol: 'https',
-        hostname: '*.railway.app',
-        pathname: '/media/**',
-      },
-      {
-        protocol: 'https',
-        hostname: '*.render.com',
-        pathname: '/media/**',
-      },
-      {
-        protocol: 'https',
-        hostname: '*.fly.dev',
-        pathname: '/media/**',
-      },
-      // Supabase storage (if using Supabase Storage for images)
-      {
-        protocol: 'https',
-        hostname: '*.supabase.co',
-        pathname: '/storage/**',
-      },
-      // Allow any HTTPS backend for flexibility (you can restrict this later)
-      {
-        protocol: 'https',
-        hostname: '**',
         pathname: '/media/**',
       },
     ],

@@ -54,6 +54,7 @@ The frontend will start at: **http://localhost:3000**
 1. Open http://localhost:3000 in your browser
 2. Make sure the backend is running at http://localhost:8000
 3. You should see the Book Store Scraper interface
+4. Visit http://localhost:3000/dev-status to check system status and backend connection
 
 ---
 
@@ -110,7 +111,7 @@ frontend/
 │   │   ├── admin/             # Admin dashboard
 │   │   │   └── page.tsx
 │   │   ├── dev-status/        # Development status page
-│   │   │   └── page.tsx
+│   │   │   └── page.tsx       # System info, backend health, dev tools
 │   │   ├── layout.tsx         # Root layout
 │   │   └── globals.css        # Global styles
 │   ├── components/            # React components
@@ -159,6 +160,7 @@ npm run lint
 - ✅ **Image Display**: View book cover images
 - ✅ **Responsive Design**: Works on desktop and mobile
 - ✅ **Admin Panel**: Admin dashboard for managing data
+- ✅ **Dev Status Page**: Development status and system information page
 
 ---
 
@@ -261,11 +263,26 @@ NEXT_PUBLIC_API_URL=https://your-backend-url.com
 
 ## 🛠️ Tech Stack
 
-- **Framework**: Next.js 16
-- **UI Library**: React 19
-- **Language**: TypeScript
+- **Framework**: Next.js 16.0.10
+- **UI Library**: React 19.2.1
+- **Language**: TypeScript 5
 - **Styling**: Tailwind CSS 4
 - **HTTP Client**: Fetch API (via `lib/api.ts`)
+
+## 📊 Development Status Page
+
+The application includes a dedicated development status page at `/dev-status` that provides:
+
+- **Backend Connection Status**: Real-time monitoring of backend API connectivity
+- **System Information**: Frontend URL, API URL, Node.js version, and environment details
+- **Health Checks**: Backend health endpoint status and response details
+- **Quick Links**: Easy navigation to Home, Admin Panel, and Backend API
+- **Environment Configuration**: View current environment variables and configuration
+- **Development Tips**: Helpful tips for development workflow
+
+**Access the Dev Status Page:**
+- Navigate to: http://localhost:3000/dev-status
+- Or click the "Dev Status" link from the admin panel (if added)
 
 ---
 

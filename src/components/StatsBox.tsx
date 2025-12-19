@@ -32,27 +32,27 @@ export default function StatsBox() {
     };
 
     return (
-        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-4">
+        <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
             <div className="flex gap-8">
                 <div className="flex items-center gap-3">
-                    <div className="bg-blue-500 text-white rounded-full w-12 h-12 flex items-center justify-center font-bold text-lg">
+                    <div className="bg-gradient-to-br from-blue-500 to-indigo-600 text-white rounded-full w-14 h-14 flex items-center justify-center font-bold text-lg shadow-md">
                         {loading ? '-' : stats.categories}
                     </div>
                     <div>
-                        <p className="text-sm text-gray-600">Categories Scraped</p>
-                        <p className="text-xs text-gray-500">Total categories in database</p>
+                        <p className="text-sm font-semibold text-gray-800">Categories Scraped</p>
+                        <p className="text-xs text-gray-600">Total categories in database</p>
                     </div>
                 </div>
 
-                <div className="border-l border-blue-200"></div>
+                <div className="border-l border-gray-200"></div>
 
                 <div className="flex items-center gap-3">
-                    <div className="bg-indigo-500 text-white rounded-full w-12 h-12 flex items-center justify-center font-bold text-lg">
+                    <div className="bg-gradient-to-br from-emerald-500 to-teal-600 text-white rounded-full w-14 h-14 flex items-center justify-center font-bold text-lg shadow-md">
                         {loading ? '-' : stats.books}
                     </div>
                     <div>
-                        <p className="text-sm text-gray-600">Books Scraped</p>
-                        <p className="text-xs text-gray-500">Total books in database</p>
+                        <p className="text-sm font-semibold text-gray-800">Books Scraped</p>
+                        <p className="text-xs text-gray-600">Total books in database</p>
                     </div>
                 </div>
             </div>
