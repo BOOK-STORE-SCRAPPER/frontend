@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Navigation from "../components/Navigation";
 import CategoryList from "../components/CategoryList";
 import BookList from "../components/BookList";
 import BookDetails from "../components/BookDetails";
@@ -51,23 +52,15 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <div className="bg-white border-b">
-        <div className="p-4">
-          <div className="flex items-center justify-between mb-4">
-            <h1 className="text-4xl font-bold flex-1 text-center">Book Store</h1>
-            <Link href="/admin">
-              <button className="px-4 py-2 bg-purple-500 text-white font-semibold rounded hover:bg-purple-600 transition text-sm">
-                Admin
-              </button>
-            </Link>
-          </div>
-          <StatsBox />
-        </div>
+      <Navigation />
+      
+      <div className="p-6">
+        <StatsBox />
       </div>
 
-      <div className="flex h-[calc(100vh-100px)]">
-        {/* Left Sidebar */}
-        <div className="w-[300px] bg-white border-r overflow-y-auto">
+      <div className="flex h-[calc(100vh-180px)] px-6 pb-6 gap-6">
+        {/* Left Sidebar - Dark Theme */}
+        <div className="w-[300px] bg-gray-800 border border-gray-700 rounded-xl shadow-lg overflow-hidden">
           <CategoryList
             categories={categories}
             loading={loading}
@@ -76,13 +69,13 @@ export default function Home() {
           />
         </div>
 
-        {/* Right Panel */}
-        <div className="flex-1 overflow-y-auto p-8">
+        {/* Right Panel - Light Theme */}
+        <div className="flex-1 overflow-y-auto bg-white border border-gray-200 rounded-xl shadow-sm p-8">
           {categories.length === 0 ? (
-            <div className="h-full flex items-center justify-center bg-yellow-100 rounded-lg">
+            <div className="h-full flex items-center justify-center bg-gray-50 rounded-lg border border-gray-200">
               <div className="text-center">
-                <p className="text-2xl text-gray-600 mb-4">No Data Available</p>
-                <p className="text-gray-600">Go to <Link href="/admin" className="text-purple-500 font-semibold hover:underline">Admin</Link> to scrape data</p>
+                <p className="text-2xl text-gray-800 mb-4 font-semibold">No Data Available</p>
+                <p className="text-gray-600">Go to <Link href="/admin" className="text-violet-600 font-semibold hover:text-violet-700 hover:underline transition">Admin</Link> to scrape data</p>
               </div>
             </div>
           ) : selectedBookId ? (

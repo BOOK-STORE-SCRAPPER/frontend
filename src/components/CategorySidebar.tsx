@@ -51,11 +51,9 @@ export default function CategorySidebar({
         setError(null);
 
         try {
-            const result = await api.post('/categories/', { base_url: 'http://books.toscrape.com/' });
-            console.log('Categories scraped:', result);
+            await api.post('/categories/', { base_url: 'http://books.toscrape.com/' });
             fetchCategories();
         } catch (err) {
-            console.error('Error scraping categories:', err);
             setError(err instanceof Error ? err.message : 'Failed to scrape categories');
         } finally {
             setScraping(false);
@@ -80,8 +78,7 @@ export default function CategorySidebar({
                 }))
             };
 
-            const result = await api.post('/scrape/categories', payload);
-            console.log('Books scraped:', result);
+            await api.post('/scrape/categories', payload);
 
             // Refetch categories to update has_books status
             fetchCategories();

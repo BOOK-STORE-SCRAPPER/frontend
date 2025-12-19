@@ -1,7 +1,7 @@
 // src/components/BookDetails.tsx
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
 import { Book } from '../types/api';
 import { api, getImageUrl } from '../lib/api';
@@ -14,17 +14,20 @@ interface BookDetailsProps {
 export default function BookDetails({ bookId, onBack }: BookDetailsProps) {
     const [book, setBook] = useState<Book | null>(null);
     const [loading, setLoading] = useState(false);
+    const [imageError, setImageError] = useState(false);
 
     useEffect(() => {
         if (!bookId) {
             setBook(null);
             setLoading(false);
+            setImageError(false);
             return;
         }
 
         const fetchBookDetails = async () => {
             setLoading(true);
             setBook(null);
+            setImageError(false);
 
             try {
                 const data = await api.get<{ book: Book }>(`/scrape/books/${bookId}`);
@@ -40,22 +43,32 @@ export default function BookDetails({ bookId, onBack }: BookDetailsProps) {
         fetchBookDetails();
     }, [bookId]);
 
+    // ✅ compute once (and avoid "" passing into <Image />)
+    const imageSrc = useMemo(() => {
+        if (!book) return null;
+        const src = getImageUrl(book.image_path, book.image_url);
+        return src && src.trim().length > 0 ? src : null;
+    }, [book]);
+
     if (!bookId) return null;
     if (loading) return <div>Loading book details...</div>;
-    if (!book) return (
-        <div className="max-w-4xl mx-auto">
-            <button
-                onClick={onBack}
-                className="mb-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-            >
-                ← Back to Books
-            </button>
-            <div>Book not found</div>
-        </div>
-    );
+
+    if (!book) {
+        return (
+            <div className="max-w-4xl mx-auto">
+                <button
+                    onClick={onBack}
+                    className="mb-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                >
+                    ← Back to Books
+                </button>
+                <div>Book not found</div>
+            </div>
+        );
+    }
 
     return (
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-6xl mx-auto">
             <button
                 onClick={onBack}
                 className="mb-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
@@ -66,18 +79,38 @@ export default function BookDetails({ bookId, onBack }: BookDetailsProps) {
             <div className="bg-white border rounded-lg p-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        {(book.image_path || book.image_url) && (
-                            <div className="relative w-full h-96">
-                                <Image
-                                    src={getImageUrl(book.image_path, book.image_url)}
-                                    alt={book.title}
-                                    fill
-                                    className="object-cover rounded-lg"
-                                    sizes="(max-width: 768px) 100vw, 50vw"
-                                    priority={false}
-                                />
+                        {/* Image rendering */}
+                        {imageSrc ? (
+                            <div className="relative w-full aspect-[3/4] overflow-hidden rounded-lg">
+                                {!imageError ? (
+                                    <Image
+                                        src={imageSrc}
+                                        alt={book.title}
+                                        fill
+                                        className="object-cover"
+                                        sizes="(max-width: 768px) 100vw, 50vw"
+                                        unoptimized
+                                        onError={() => {
+                                            setImageError(true);
+                                        }}
+                                    />
+                                ) : (
+                                    <img
+                                        src={imageSrc}
+                                        alt={book.title}
+                                        className="w-full h-full object-cover"
+                                        onError={() => {
+                                            // Image failed to load, already using fallback
+                                        }}
+                                    />
+                                )}
+                            </div>
+                        ) : (
+                            <div className="w-full aspect-[3/4] rounded-lg bg-gray-200 flex items-center justify-center text-sm text-gray-600">
+                                No image available
                             </div>
                         )}
+
                         {book.details_scraped === 0 && (
                             <div className="mt-4 p-3 bg-yellow-100 text-yellow-800 rounded">
                                 <p className="text-sm">⚠️ Product details not yet scraped</p>
@@ -92,7 +125,6 @@ export default function BookDetails({ bookId, onBack }: BookDetailsProps) {
                             <span className="font-semibold">Availability:</span> {book.availability}
                         </p>
 
-                        {/* Product Details */}
                         <div className="space-y-2 mb-4">
                             {book.upc && (
                                 <p className="text-sm text-gray-600">
@@ -131,17 +163,19 @@ export default function BookDetails({ bookId, onBack }: BookDetailsProps) {
                             )}
                         </div>
 
-                        {book.description && (
+                        {book.description ? (
                             <div className="mt-6">
                                 <h2 className="text-xl font-semibold mb-2">Description</h2>
                                 <p className="text-gray-700 leading-relaxed">{book.description}</p>
                             </div>
-                        )}
-
-                        {!book.description && book.details_scraped === 0 && (
-                            <div className="mt-6 p-4 bg-gray-100 rounded">
-                                <p className="text-gray-600">Product details not available. Run scraping from Admin panel to get full details.</p>
-                            </div>
+                        ) : (
+                            book.details_scraped === 0 && (
+                                <div className="mt-6 p-4 bg-gray-100 rounded">
+                                    <p className="text-gray-600">
+                                        Product details not available. Run scraping from Admin panel to get full details.
+                                    </p>
+                                </div>
+                            )
                         )}
                     </div>
                 </div>
