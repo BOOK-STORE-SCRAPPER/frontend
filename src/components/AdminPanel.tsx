@@ -396,12 +396,7 @@ export default function AdminPanel({
                             <p className="text-violet-600 font-medium mb-1">Products Scraped</p>
                             <p className="text-lg font-semibold text-violet-800">{status.items_scraped}</p>
                         </div>
-                        {status.images_scraped !== undefined && (
-                            <div>
-                                <p className="text-violet-600 font-medium mb-1">Images Scraped</p>
-                                <p className="text-lg font-semibold text-violet-800">{status.images_scraped}</p>
-                            </div>
-                        )}
+
                         <div>
                             <p className="text-violet-600 font-medium mb-1">Started At</p>
                             <p className="text-sm text-violet-700">{formatDate(status.started_at)}</p>
